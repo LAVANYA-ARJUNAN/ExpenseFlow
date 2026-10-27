@@ -2,8 +2,6 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-const db = require("./config/db");
-
 const app = express();
 
 app.use(cors());
@@ -19,23 +17,28 @@ app.get("/", (req, res) => {
   res.send("ExpenseFlow API is running!");
 });
 
-const PORT = process.env.PORT || 5000;
+module.exports = app;
 
-async function startServer() {
-  try {
-    const connection = await db.getConnection();
+// Run a local server only during local development.
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
 
-    console.log("MySQL connected successfully!");
+  const db = require("./config/db");
 
-    connection.release();
+  async function startServer() {
+    try {
+      const connection = await db.getConnection();
+      console.log("MySQL connected successfully!");
+      connection.release();
 
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error("MySQL connection failed:", error.message);
-    process.exit(1);
+      app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+      });
+    } catch (error) {
+      console.error("MySQL connection failed:", error.message);
+      process.exit(1);
+    }
   }
-}
 
-startServer();
+  startServer();
+}
