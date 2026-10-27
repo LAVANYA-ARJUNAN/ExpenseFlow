@@ -5,24 +5,19 @@ require("dotenv").config();
 const app = express();
 
 const allowedOrigins = [
-  "https://expense-flow-dbkl.vercel.app/",
+  "https://expense-flow-99nb3a8hn-lavanyas-projects-800c12f3.vercel.app",
 ];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-app.use(express.json());
+
+
 app.use(express.json());
 
 const authRoutes = require("./routes/authRoutes");
